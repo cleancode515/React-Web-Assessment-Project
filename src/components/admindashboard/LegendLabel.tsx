@@ -6,7 +6,7 @@ interface LegendLabelProps {
 const LegendLabel = ({ label, color }: LegendLabelProps) => {
   return (
     <p
-      className="text-2xl font-[700] hover:brightness-110 text-black py-4 px-7 rounded-md font-bold transition"
+      className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold hover:brightness-110 text-black py-2 sm:py-3 md:py-4 px-4 sm:px-5 md:px-7 rounded-md transition w-fit"
       style={{ backgroundColor: color }}
     >
       {label}

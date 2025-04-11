@@ -101,7 +101,7 @@ const AdminDashboard: React.FC = () => {
               <MonthIncreaseText title={t("increase")} subtitle={"$456.8"} />
             </div>
           </div>
-          <div className="flex justify-start gap-4 mt-8 ml-3">
+          <div className="flex flex-wrap justify-start gap-4 mt-8 ml-3 sm:ml-4 md:ml-6">
             {dashboardData?.pieChartData.map((item, index) => (
               <LegendLabel
                 key={item.x}
