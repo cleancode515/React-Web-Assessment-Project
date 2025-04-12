@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import { UserRole } from "../types/authTypes";
 
 type ProtectedRouteProps = {
@@ -12,7 +13,9 @@ export const ProtectedRoute = ({
   children,
   allowedRoles,
 }: ProtectedRouteProps) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   if (!isAuthenticated) return <Navigate to="/login" />;
   if (user && !allowedRoles.includes(user.role))

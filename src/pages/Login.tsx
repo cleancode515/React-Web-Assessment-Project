@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -19,6 +19,16 @@ const Login: React.FC = () => {
   );
   const { toast } = useToast();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    if (authService.isAuthenticated()) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        dispatch(loginSuccess(JSON.parse(storedUser)));
+      }
+    }
+  }, [dispatch]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +61,7 @@ const Login: React.FC = () => {
       setIsLoading(false);
     }
   };
+
   if (isAuthenticated && user) {
     return <Navigate to={user.role === "ADMIN" ? "/admin" : "/user"} replace />;
   }

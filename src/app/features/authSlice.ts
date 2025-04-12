@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState, User } from "@/types/authTypes";
 
-const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
-  loading: false,
-  error: null,
+// Get initial state from localStorage
+const getInitialState = (): AuthState => {
+  const user = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
+
+  return {
+    user: user ? JSON.parse(user) : null,
+    isAuthenticated: !!(user && token),
+    loading: false,
+    error: null,
+  };
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     loginStart: (state) => {
       state.loading = true;
@@ -32,9 +38,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    rehydrate: (state, action: PayloadAction<AuthState>) => {
+      return { ...state, ...action.payload };
+    },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } =
+export const { loginStart, loginSuccess, loginFailure, logout, rehydrate } =
   authSlice.actions;
 export default authSlice.reducer;

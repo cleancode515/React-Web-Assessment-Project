@@ -10,7 +10,8 @@ import NormalChart from "@/components/admindashboard/NormalChart";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
 import { logout } from "@/app/features/authSlice";
-
+import { authService } from "@/services/authService";
+import { useNavigate } from "react-router-dom";
 import {
   fetchAdminDashboardStart,
   fetchAdminDashboardFailure,
@@ -25,9 +26,16 @@ const COLORS = ["#2280FF", "#3DD34C", "#414CAA"];
 const AdminDashboard: React.FC = () => {
   const { t, setLanguage, language } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { dashboardData, loading, error } = useSelector(
     (state: RootState) => state.admin
   );
+
+  const handleLogout = () => {
+    authService.logout();
+    dispatch(logout());
+    navigate("/login");
+  };
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -56,7 +64,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <button
-            onClick={() => dispatch(logout())}
+            onClick={handleLogout}
             className="text-zinc-400 hover:text-white"
             aria-label="Logout"
           >

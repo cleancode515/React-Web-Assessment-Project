@@ -11,19 +11,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store";
 import { UserDashboardData } from "@/types/data";
 import { logout } from "@/app/features/authSlice";
+import { authService } from "@/services/authService";
 import {
   fetchUserDashboardStart,
   fetchUserDashboardSuccess,
   fetchUserDashboardFailure,
 } from "@/app/features/userSlice";
 import { userService } from "@/services/userService";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard: React.FC = () => {
   const { t, setLanguage, language } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { dashboardData, loading, error } = useSelector(
     (state: RootState) => state.user
   );
+
+  const handleLogout = () => {
+    authService.logout();
+    dispatch(logout());
+    navigate("/login");
+  };
 
   useEffect(() => {
     console.log("test");
@@ -58,7 +67,7 @@ const UserDashboard: React.FC = () => {
           </div>
 
           <button
-            onClick={() => dispatch(logout())}
+            onClick={handleLogout}
             className="text-zinc-400 hover:text-white"
             aria-label="Logout"
           >
