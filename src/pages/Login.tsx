@@ -183,8 +183,8 @@ const Login: React.FC = () => {
 
           <div className="text-center text-xs text-zinc-500">
             <p>Demo Credentials:</p>
-            <p>Admin: admin@gmail.com / admin123</p>
-            <p>User: user@gmail.com / user123</p>
+            <p>Admin: admin@gmail.com / password123</p>
+            <p>User: user@gmail.com / password123</p>
           </div>
         </form>
       </div>
