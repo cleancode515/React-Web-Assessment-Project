@@ -8,6 +8,12 @@ interface LoginCredentials {
   password: string;
 }
 
+interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+}
+
 interface LoginResponse {
   tokens: Tokens;
   user: User;
@@ -37,6 +43,36 @@ export const authService = {
     } catch (error) {
       if (error instanceof AxiosError) {
         throw new Error(error.response?.data?.message || "Login failed");
+      }
+      throw error;
+    }
+  },
+
+  register: async (
+    credentials: RegisterCredentials
+  ): Promise<LoginResponse> => {
+    try {
+      const response = await api.post("/auth/register", credentials);
+      const user = response.data?.user;
+      const tokens = response.data?.tokens;
+
+      if (!user || !tokens) {
+        throw new Error("Invalid registration response format");
+      }
+
+      // Store both token and user data
+      localStorage.setItem("token", tokens.access.token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      toast({
+        title: "Registration successful",
+        description: `Welcome ${user.name}`,
+      });
+
+      return { user, tokens };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data?.message || "Registration failed");
       }
       throw error;
     }

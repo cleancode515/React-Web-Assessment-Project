@@ -63,7 +63,7 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         screens: {
-          //   xs: { max: "450px" },
+          xxs: "450px",
         },
       },
       borderRadius: {

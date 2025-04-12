@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
   loginStart,
@@ -14,6 +14,10 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
@@ -30,15 +34,37 @@ const Login: React.FC = () => {
     }
   }, [dispatch]);
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {
+      email: "",
+      password: "",
+    };
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email";
+      isValid = false;
+    }
+
+    // Password validation
+    if (!password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please enter both email and password",
-        variant: "destructive",
-      });
+    if (!validateForm()) {
       return;
     }
 
@@ -70,7 +96,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-md p-8 space-y-8 bg-zinc-900 rounded-lg shadow-xl border border-zinc-800">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white">Login</h1>
+          <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
           <p className="mt-2 text-zinc-400">Sign in to your account</p>
         </div>
 
@@ -86,13 +112,23 @@ const Login: React.FC = () => {
               <input
                 id="email"
                 name="email"
-                type="text"
+                type="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="admin@gmail.com or user@gmail.com"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) {
+                    setErrors((prev) => ({ ...prev, email: "" }));
+                  }
+                }}
+                className={`mt-1 block w-full px-3 py-2 bg-zinc-800 border ${
+                  errors.email ? "border-red-500" : "border-zinc-700"
+                } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Enter your email"
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
 
             <div>
@@ -108,10 +144,20 @@ const Login: React.FC = () => {
                 type="password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="admin123 or user123"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errors.password) {
+                    setErrors((prev) => ({ ...prev, password: "" }));
+                  }
+                }}
+                className={`mt-1 block w-full px-3 py-2 bg-zinc-800 border ${
+                  errors.password ? "border-red-500" : "border-zinc-700"
+                } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Enter your password"
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
           </div>
 
@@ -119,16 +165,26 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
             >
-              {isLoading ? "Logging in..." : "Sign in"}
+              {isLoading ? "Signing in..." : "Sign in"}
             </button>
           </div>
 
+          <div className="text-center text-sm text-zinc-400">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-blue-500 hover:text-blue-400 transition-colors duration-200"
+            >
+              Sign up
+            </Link>
+          </div>
+
           <div className="text-center text-xs text-zinc-500">
-            <p>Use the following credentials:</p>
-            <p>Admin: email = admin@gmail.com, password = admin123</p>
-            <p>User: email = user@gmail.com, password = user123</p>
+            <p>Demo Credentials:</p>
+            <p>Admin: admin@gmail.com / admin123</p>
+            <p>User: user@gmail.com / user123</p>
           </div>
         </form>
       </div>
