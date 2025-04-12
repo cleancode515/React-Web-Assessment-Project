@@ -20,7 +20,7 @@ const LastIncomeChart = ({
   paddingAngle = 1,
 }: LastIncomeChartProps) => {
   return (
-    <ResponsiveContainer className="w-[250px] h-[250px] z-50 relative">
+    <ResponsiveContainer className="w-[250px] h-[250px] z-50 relative translate -translate-x-[20px]">
       <PieChart>
         <Pie
           data={data}

@@ -117,7 +117,7 @@ const AdminDashboard: React.FC = () => {
             <ChartTitle title="+55%" />
           </div>
 
-          <div className="flex justify-between mb-2 h-[380px] ">
+          <div className="flex justify-between mb-2 h-[380px] translate -translate-x-[20px]">
             <NormalChart data={dashboardData?.normalChartData || []} />
           </div>
         </MainBox>
